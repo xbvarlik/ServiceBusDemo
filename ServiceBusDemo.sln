@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusDemo.Sender", "ServiceBusDemo.Sender\ServiceBusDemo.Sender.csproj", "{5C7B0AB9-3DAB-4664-82F2-E1A8D2B10665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusDemo.Receiver", "ServiceBusDemo.Receiver\ServiceBusDemo.Receiver.csproj", "{8BA416B0-2C81-4B19-87EC-E33966965468}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C7B0AB9-3DAB-4664-82F2-E1A8D2B10665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7B0AB9-3DAB-4664-82F2-E1A8D2B10665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7B0AB9-3DAB-4664-82F2-E1A8D2B10665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7B0AB9-3DAB-4664-82F2-E1A8D2B10665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA416B0-2C81-4B19-87EC-E33966965468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA416B0-2C81-4B19-87EC-E33966965468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA416B0-2C81-4B19-87EC-E33966965468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA416B0-2C81-4B19-87EC-E33966965468}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
