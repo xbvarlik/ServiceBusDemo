@@ -2,11 +2,12 @@
 
 namespace ServiceBusDemo.Receiver.Services.MessageHandlers;
 
-public class LogMessageHandler(ILogger logger) : IMessageHandler
+public class LogMessageHandler(ILogger<LogMessageHandler> logger) : IMessageHandler
 {
+    private readonly ILogger<LogMessageHandler> _logger = logger;
     public Task HandleMessageAsync(ServiceBusReceivedMessage message)
     {
-        logger.LogInformation($"Received message: {message.Body}");
+        _logger.LogInformation($"Received message: {message.Body}");
         
         return Task.CompletedTask;
     }

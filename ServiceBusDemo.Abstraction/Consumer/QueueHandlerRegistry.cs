@@ -1,6 +1,4 @@
-﻿using ServiceBusDemo.Receiver.Services.MessageHandlers;
-
-namespace ServiceBusDemo.Receiver.Services;
+﻿namespace ServiceBusDemo.Abstraction.Consumer;
 
 public class QueueHandlerRegistry
 {

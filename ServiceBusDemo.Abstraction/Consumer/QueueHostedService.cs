@@ -1,13 +1,14 @@
 ﻿using Azure.Messaging.ServiceBus;
-using ServiceBusDemo.Receiver.Services.MessageHandlers;
-using ServiceBusDemo.Sender.Constants;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace ServiceBusDemo.Receiver.Services;
+namespace ServiceBusDemo.Abstraction.Consumer;
 
-public class QueueReceiverHostedService(IConfiguration configuration, ILogger<QueueReceiverHostedService> logger, QueueHandlerRegistry handlerRegistry) : BackgroundService
+public class QueueReceiverHostedService(ServiceBusOptions options, ILogger<QueueReceiverHostedService> logger, QueueHandlerRegistry handlerRegistry) : BackgroundService
 {
-    private readonly ServiceBusClient _client = new (configuration["ServiceBus:ConnectionString"]);
-    private readonly IList<string>? _queueNames = configuration.GetSection("ServiceBus:Queues").Get<List<string>>();
+    private readonly ServiceBusClient _client = new (options.ConnectionString);
+    private readonly IList<string>? _queueNames = options.Queues;
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

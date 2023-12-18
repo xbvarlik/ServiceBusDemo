@@ -1,18 +1,12 @@
 ﻿using System.Text.Json;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 
-namespace ServiceBusDemo.Sender.Services;
+namespace ServiceBusDemo.Abstraction.Publisher;
 
-public class QueueService(IConfiguration configuration)
+public class QueuePublisherService(ServiceBusOptions options)
 {
-    private readonly ServiceBusClient _client = new(configuration["ServiceBus:ConnectionString"]);
-
-    public async Task SendMessageAsync(string message, string queueName)
-    {
-        var sender = _client.CreateSender(queueName);
-        var serviceBusMessage = new ServiceBusMessage(message);
-        await sender.SendMessageAsync(serviceBusMessage);
-    }
+    private readonly ServiceBusClient _client = new(options.ConnectionString);
     
     public async Task SendMessageAsync<T>(T message, string queueName)
     {

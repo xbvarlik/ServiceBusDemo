@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusDemo.Sender", "Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusDemo.Receiver", "ServiceBusDemo.Receiver\ServiceBusDemo.Receiver.csproj", "{8BA416B0-2C81-4B19-87EC-E33966965468}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusDemo.Abstraction", "ServiceBusDemo.Abstraction\ServiceBusDemo.Abstraction.csproj", "{5F7FCB65-35DE-48C0-8893-53B365C69F06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{8BA416B0-2C81-4B19-87EC-E33966965468}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BA416B0-2C81-4B19-87EC-E33966965468}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BA416B0-2C81-4B19-87EC-E33966965468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F7FCB65-35DE-48C0-8893-53B365C69F06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F7FCB65-35DE-48C0-8893-53B365C69F06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F7FCB65-35DE-48C0-8893-53B365C69F06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F7FCB65-35DE-48C0-8893-53B365C69F06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
