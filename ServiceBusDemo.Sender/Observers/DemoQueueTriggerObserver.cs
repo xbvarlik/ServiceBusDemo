@@ -1,14 +1,7 @@
-﻿using ServiceBusDemo.Sender.Constants;
-using ServiceBusDemo.Sender.Services;
+﻿using ServiceBusDemo.Abstraction.Publisher;
+using ServiceBusDemo.Sender.Constants;
 
 namespace ServiceBusDemo.Sender.Observers;
 
-public class DemoQueueTriggerObserver(QueueService queueService) : ITriggerObserver
-{
-    private readonly string _queueName = ServiceBusConstants.DemoQueue;
-    
-    public async Task OnTriggered<T>(T message)
-    {
-        await queueService.SendMessageAsync(message, _queueName);
-    }
-}
+public class DemoQueueTriggerObserver(QueuePublisherService service) : Observer(service, ServiceBusConstants.DemoQueue)
+{ }

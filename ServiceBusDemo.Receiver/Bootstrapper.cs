@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ServiceBusDemo.Receiver.Services;
+using ServiceBusDemo.Abstraction;
 using ServiceBusDemo.Receiver.Services.MessageHandlers;
 using ServiceBusDemo.Sender.Constants;
 
@@ -11,9 +11,8 @@ public static class Bootstrapper
     {
         services.AddApplicationControllersConfiguration();
         services.AddEndpointsApiExplorer();
-        services.AddApplicationServices();
         services.AddSwaggerGen();
-        services.AddMessageConsumer();
+        services.ConfigureServiceBus(configuration);
     }
 
     [SuppressMessage("ReSharper", "InvertIf")]
@@ -27,29 +26,16 @@ public static class Bootstrapper
         app.UseSwaggerUI();
         
     }
-
-    private static void AddApplicationServices(this IServiceCollection services)
-    {
-        services.AddHostedService<QueueReceiverHostedService>();
-    }
     
     private static void AddApplicationControllersConfiguration(this IServiceCollection services)
     {
         services.AddControllers();
     }
     
-    private static void AddMessageConsumer(this IServiceCollection services)
+    private static void ConfigureServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<LogMessageHandler>();
-        
-        services.AddSingleton<QueueHandlerRegistry>(sp =>
-        {
-            var registry = new QueueHandlerRegistry();
-            
-            registry.RegisterHandler(ServiceBusConstants.DemoQueue, sp.GetRequiredService<LogMessageHandler>());
-            
-            return registry;
-        });
+        services.AddServiceBusDemo(configuration);
+        services.AddMessageHandler<LogMessageHandler>(ServiceBusConstants.DemoQueue);
     }
     
     private static void ConfigureApplicationSwagger(this WebApplication app)

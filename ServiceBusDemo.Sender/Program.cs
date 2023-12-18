@@ -1,5 +1,4 @@
 using ServiceBusDemo.Sender;
-using ServiceBusDemo.Sender.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

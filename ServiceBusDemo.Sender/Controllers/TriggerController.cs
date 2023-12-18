@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceBusDemo.Sender.Constants;
 using ServiceBusDemo.Sender.Models;
 using ServiceBusDemo.Sender.Observers;
 using ServiceBusDemo.Sender.Services;

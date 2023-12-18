@@ -1,4 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
+using ServiceBusDemo.Abstraction.Consumer;
 
 namespace ServiceBusDemo.Receiver.Services.MessageHandlers;
 

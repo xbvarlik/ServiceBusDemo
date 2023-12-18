@@ -10,12 +10,7 @@ public static class Bootstrapper
 {
     public static void AddServiceBusDemo(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSubject<Subject>()
-            .AddObserver<Observer>()
-            .AddObserver<Observer>();
-        
-        services.AddQueueHandlerRegistry();
-        // services.AddMessageHandler<LogMessageHandler>(ServiceBusConstants.DemoQueue);
+        services.AddSingleton<QueueHandlerRegistry>();
         
         var serviceBusOptions = configuration.GetSection("ServiceBusOptions").Get<ServiceBusOptions>();
 
@@ -67,15 +62,6 @@ public static class Bootstrapper
 
         return services;
     }
-
-    public static void AddQueueHandlerRegistry(this IServiceCollection services)
-    {
-        services.AddSingleton<QueueHandlerRegistry>(sp =>
-        {
-            var registry = new QueueHandlerRegistry();
-            return registry;
-        });
-    }
     
     public static void AddMessageHandler<TMessageHandler>(this IServiceCollection services, string queueName)
         where TMessageHandler : IMessageHandler
@@ -88,12 +74,9 @@ public static class Bootstrapper
             return handler;
         });
     }
-    
-    internal static class ServiceBusConfiguration
+
+    private static class ServiceBusConfiguration
     {
-        public static Type LastRegisteredSubjectType { get; set; }
+        public static Type LastRegisteredSubjectType { get; set; } = default!;
     }
-    
-
-
 }

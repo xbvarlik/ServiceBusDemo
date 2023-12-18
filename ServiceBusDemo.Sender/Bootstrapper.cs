@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ServiceBusDemo.Abstraction;
 using ServiceBusDemo.Sender.Observers;
 using ServiceBusDemo.Sender.Services;
 
@@ -11,7 +12,7 @@ public static class Bootstrapper
         services.AddApplicationControllersConfiguration();
         services.AddEndpointsApiExplorer();
         services.AddApplicationServices();
-        services.AddObservers();
+        services.ConfigureServiceBus(configuration);
         services.AddSwaggerGen();
     }
 
@@ -29,20 +30,15 @@ public static class Bootstrapper
 
     private static void AddApplicationServices(this IServiceCollection services)
     {
-        services.AddSingleton<QueueService>();
         services.AddScoped<TriggerService>();
     }
     
-    private static void AddObservers(this IServiceCollection services)
+    private static void ConfigureServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<TriggerSubject>(sp =>
-        {
-            var triggerSubject = new TriggerSubject();
-            
-            triggerSubject.RegisterObserver(new DemoQueueTriggerObserver(sp.GetRequiredService<QueueService>()));
-            
-            return triggerSubject;
-        });
+        services.AddServiceBusDemo(configuration);
+        
+        services.AddSubject<TriggerSubject>()
+            .AddObserver<DemoQueueTriggerObserver>();
     }
     
     private static void AddApplicationControllersConfiguration(this IServiceCollection services)
