@@ -3,5 +3,12 @@ using ServiceBusDemo.Sender.Constants;
 
 namespace ServiceBusDemo.Sender.Observers;
 
-public class DemoQueueTriggerObserver(QueuePublisherService service) : Observer(service, ServiceBusConstants.DemoQueue)
-{ }
+public class DemoQueueTriggerObserver : Observer
+{
+    public DemoQueueTriggerObserver() 
+    {
+    }
+    public DemoQueueTriggerObserver(QueuePublisherService service) : base(service, ServiceBusConstants.DemoQueue)
+    {
+    }
+}

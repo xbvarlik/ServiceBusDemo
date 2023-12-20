@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ServiceBusDemo.Abstraction;
+using ServiceBusDemo.Abstraction.Publisher;
 using ServiceBusDemo.Sender.Observers;
 using ServiceBusDemo.Sender.Services;
 
@@ -35,10 +36,15 @@ public static class Bootstrapper
     
     private static void ConfigureServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddServiceBusDemo(configuration);
+        services.AddPublisher(configuration);
         
-        services.AddSubject<TriggerSubject>()
-            .AddObserver<DemoQueueTriggerObserver>();
+        // services.AddSubject<TriggerSubject>()
+        //     .AddObserver<DemoQueueTriggerObserver>();
+
+        
+        services.AddScoped<TriggerSubject>(sp => sp.CreateSubject<TriggerSubject>()
+            .CreateObserver<TriggerSubject, DemoQueueTriggerObserver>(sp)
+        );
     }
     
     private static void AddApplicationControllersConfiguration(this IServiceCollection services)

@@ -28,20 +28,47 @@ public static class Bootstrapper
                 serviceProvider.GetRequiredService<QueueHandlerRegistry>())
         );
     }
+
+    public static void AddPublisher(this IServiceCollection services, IConfiguration configuration)
+    {
+        var serviceBusOptions = configuration.GetSection("ServiceBusOptions").Get<ServiceBusOptions>();
+
+        if (serviceBusOptions == null)
+            throw new InvalidOperationException("ServiceBusOptions not found in configuration");
+        
+        services.AddScoped(_ => new QueuePublisherService(serviceBusOptions));
+    }
     
     public static IServiceCollection AddSubject<TSubject>(this IServiceCollection services) 
-        where TSubject : Subject
+        where TSubject : Subject, new()
     {
         ServiceBusConfiguration.LastRegisteredSubjectType = typeof(TSubject);
         
         services.AddScoped<TSubject>(sp =>
         {
             var subject = ActivatorUtilities.CreateInstance<TSubject>(sp);
-            
             return subject;
         });
+
+        // services.AddScoped<TSubject>(_ => new TSubject());
         
         return services;
+    }
+    
+    public static TSubject CreateSubject<TSubject>(this IServiceProvider serviceProvider) 
+        where TSubject : Subject
+    {
+        var subject = ActivatorUtilities.CreateInstance<TSubject>(serviceProvider);
+        return subject;
+    }
+
+    public static TSubject CreateObserver<TSubject, TObserver>(this TSubject subject, IServiceProvider serviceProvider)
+    where TObserver : IObserver, new()
+    where TSubject : Subject
+    {
+        var observer = ActivatorUtilities.CreateInstance<TObserver>(serviceProvider);
+        subject.RegisterObserver(observer);
+        return subject;
     }
     
     public static IServiceCollection AddObserver<TObserver>(this IServiceCollection services) 
@@ -55,7 +82,7 @@ public static class Bootstrapper
         services.AddScoped(typeof(TObserver), sp =>
         {
             var subject = (Subject)sp.GetRequiredService(subjectType);
-            var observer = (Observer)sp.GetRequiredService(typeof(TObserver));
+            var observer = ActivatorUtilities.CreateInstance<TObserver>(sp);
             subject.RegisterObserver(observer);
             return observer;
         });
