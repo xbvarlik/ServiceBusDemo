@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ServiceBusDemo.Abstraction;
+using ServiceBusDemo.Abstraction.Consumer;
 using ServiceBusDemo.Receiver.Services.MessageHandlers;
 using ServiceBusDemo.Sender.Constants;
 
@@ -15,16 +16,11 @@ public static class Bootstrapper
         services.ConfigureServiceBus(configuration);
     }
 
-    [SuppressMessage("ReSharper", "InvertIf")]
     public static void AddAppBootstrapper(this WebApplication app)
     {
         app.UseHttpsRedirection();
         app.ConfigureApplicationSwagger();
-        // app.ConfigureApplicationExceptionHandling();
         app.MapControllers();
-        app.UseSwagger(); 
-        app.UseSwaggerUI();
-        
     }
     
     private static void AddApplicationControllersConfiguration(this IServiceCollection services)
@@ -34,19 +30,16 @@ public static class Bootstrapper
     
     private static void ConfigureServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddServiceBusDemo(configuration);
-        services.AddMessageHandler<LogMessageHandler>(ServiceBusConstants.DemoQueue);
+        services.AddSingleton<QueueHandlerRegistry>(sp => 
+            sp.AddHandlerRegistry().
+                AddMessageHandler<LogMessageHandler>(sp));
+        
+        services.AddSubscriber(configuration);
     }
     
     private static void ConfigureApplicationSwagger(this WebApplication app)
     {
-        // if (!app.Environment.IsDevelopment()) return;
-
         app.UseSwagger();
+        app.UseSwaggerUI();
     }
-    
-    // private static void ConfigureApplicationExceptionHandling(this WebApplication app)
-    // {
-    //     app.UseExceptionHandler("/error");
-    // }
 }

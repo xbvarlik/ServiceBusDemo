@@ -4,16 +4,6 @@ namespace ServiceBusDemo.Abstraction.Publisher;
 
 public class Subject
 {
-    // public Subject(List<IObserver> observers)
-    // {
-    //     foreach (var observer in observers)
-    //     {
-    //         RegisterObserver(observer);
-    //     }
-    //     
-    //     Observers = observers;
-    // }
-    
     private IList<IObserver> Observers { get; } = new List<IObserver>();
     
     public async Task NotifyObserversAsync<T>(T message)

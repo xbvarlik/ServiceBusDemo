@@ -17,16 +17,11 @@ public static class Bootstrapper
         services.AddSwaggerGen();
     }
 
-    [SuppressMessage("ReSharper", "InvertIf")]
     public static void AddAppBootstrapper(this WebApplication app)
     {
         app.UseHttpsRedirection();
         app.ConfigureApplicationSwagger();
-        // app.ConfigureApplicationExceptionHandling();
         app.MapControllers();
-        app.UseSwagger(); 
-        app.UseSwaggerUI();
-        
     }
 
     private static void AddApplicationServices(this IServiceCollection services)
@@ -38,12 +33,9 @@ public static class Bootstrapper
     {
         services.AddPublisher(configuration);
         
-        // services.AddSubject<TriggerSubject>()
-        //     .AddObserver<DemoQueueTriggerObserver>();
-
-        
-        services.AddScoped<TriggerSubject>(sp => sp.CreateSubject<TriggerSubject>()
-            .CreateObserver<TriggerSubject, DemoQueueTriggerObserver>(sp)
+        services.AddScoped<TriggerSubject>(sp => 
+            sp.AddSubject<TriggerSubject>()
+            .AddObserver<TriggerSubject, DemoQueueTriggerObserver>(sp)
         );
     }
     
@@ -54,13 +46,7 @@ public static class Bootstrapper
     
     private static void ConfigureApplicationSwagger(this WebApplication app)
     {
-        // if (!app.Environment.IsDevelopment()) return;
-
         app.UseSwagger();
+        app.UseSwaggerUI();
     }
-    
-    // private static void ConfigureApplicationExceptionHandling(this WebApplication app)
-    // {
-    //     app.UseExceptionHandler("/error");
-    // }
 }

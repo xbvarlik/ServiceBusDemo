@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ServiceBusDemo.Abstraction.Consumer;
 
-public class QueueReceiverHostedService(ServiceBusOptions options, ILogger<QueueReceiverHostedService> logger, QueueHandlerRegistry handlerRegistry) : BackgroundService
+public class QueueReceiverHostedService(ServiceBusOptions options, QueueHandlerRegistry handlerRegistry) : BackgroundService
 {
     private readonly ServiceBusClient _client = new (options.ConnectionString);
     private readonly IList<string>? _queueNames = options.Queues;
@@ -24,7 +24,7 @@ public class QueueReceiverHostedService(ServiceBusOptions options, ILogger<Queue
         if (_queueNames == null || !_queueNames.Any())
             await StopAsync(stoppingToken);
         
-        var receiver = new QueueMessageReceiver(_client, logger);
+        var receiver = new QueueMessageReceiver(_client);
         
         foreach (var queueName in _queueNames!)
         {
@@ -34,7 +34,7 @@ public class QueueReceiverHostedService(ServiceBusOptions options, ILogger<Queue
     }
 }
 
-internal class QueueMessageReceiver(ServiceBusClient client, ILogger<QueueReceiverHostedService> logger)
+internal class QueueMessageReceiver(ServiceBusClient client)
 {
     public async Task ReceiveMessagesFromQueueAsync(string queueName, Func<ServiceBusReceivedMessage, Task> messageHandler, CancellationToken cancellationToken)
     {
@@ -51,8 +51,8 @@ internal class QueueMessageReceiver(ServiceBusClient client, ILogger<QueueReceiv
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error processing message");
             await receiver.AbandonMessageAsync(message, null, cancellationToken);
+            throw new Exception($"Error occurred while processing message: {message.Body}", ex);
         }
     }
 }
