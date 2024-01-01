@@ -5,6 +5,7 @@ using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ServiceBusDemo.Abstraction.Models;
+using ServiceBusDemo.Abstraction.Utils;
 
 namespace ServiceBusDemo.Abstraction.Consumer;
 
@@ -37,13 +38,6 @@ public class QueueReceiverHostedService(ServiceBusOptions options, QueueHandlerR
     
     private async Task ExecuteMessageQueuesParallel(CancellationToken stoppingToken)
     {
-        using var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder.AddConsole();
-        });
-
-        var logger = loggerFactory.CreateLogger<QueueReceiverHostedService>();
-        
         if (_queueNames == null || !_queueNames.Any())
             return;
         
@@ -51,14 +45,8 @@ public class QueueReceiverHostedService(ServiceBusOptions options, QueueHandlerR
 
         var tasks = _queueNames.Select(async queueName =>
         {
-            var stopwatch = Stopwatch.StartNew();
-            
             var handler = handlerRegistry.GetHandler(queueName);
             await receiver.ReceiveMessageBatchFromQueue(queueName, handler.HandleMessageAsync, stoppingToken);
-            
-            stopwatch.Stop();
-            logger.LogInformation($"Processing is done for the queue: {queueName} in a time of {stopwatch.ElapsedMilliseconds}");
-            Console.WriteLine($"Processing is done for the queue: {queueName} in a time of {stopwatch.ElapsedMilliseconds}");
         });
 
         await Task.WhenAll(tasks);
@@ -93,17 +81,12 @@ internal class QueueMessageReceiver(ServiceBusClient client)
         CancellationToken cancellationToken = default)
     {
         var receiver = client.CreateReceiver(queueName);
-        var messages = receiver.ReceiveMessagesAsync(cancellationToken).ToBlockingEnumerable(cancellationToken);
-        
-        using var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder.AddConsole();
-        });
-
-        var logger = loggerFactory.CreateLogger<QueueMessageReceiver>();
+        var messages = await receiver.ReceiveMessagesAsync(1000, cancellationToken: cancellationToken);
         
         if (!messages.Any()) 
             return;
+        
+        var logger = LocalLogger.CreateLogger<QueueMessageReceiver>();
 
         foreach (var message in messages)
         {
@@ -118,6 +101,5 @@ internal class QueueMessageReceiver(ServiceBusClient client)
                 logger.LogError(ex.Message);
             }
         }
-        
     }
 }
