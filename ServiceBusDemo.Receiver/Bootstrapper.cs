@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ServiceBusDemo.Abstraction;
 using ServiceBusDemo.Abstraction.Consumer;
+using ServiceBusDemo.Receiver.Services;
 using ServiceBusDemo.Receiver.Services.MessageHandlers;
+using ServiceBusDemo.Receiver.Utils;
 using ServiceBusDemo.Sender.Constants;
 
 namespace ServiceBusDemo.Receiver;
@@ -14,6 +16,12 @@ public static class Bootstrapper
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.ConfigureServiceBus(configuration);
+        services.AddScoped<DemoScopedService>();
+        
+        services.AddScoped(sp => new DemoServiceBundle
+        {
+            DemoScopedService = sp.GetRequiredService<DemoScopedService>()
+        });
     }
 
     public static void AddAppBootstrapper(this WebApplication app)

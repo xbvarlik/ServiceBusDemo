@@ -25,14 +25,6 @@ public abstract class MessageHandler : IMessageHandler
     public virtual string QueueName { get; set; }
     public abstract Task HandleMessageAsync(ServiceBusReceivedMessage message);
     
-    public virtual async Task HandleMessageBatchAsync(IEnumerable<ServiceBusReceivedMessage> messages)
-    {
-        foreach (var message in messages)
-        {
-            await HandleMessageAsync(message);
-        }
-    }
-    
     protected virtual T? DeserializeMessage<T>(ServiceBusReceivedMessage message)
     {
         var messageBody = message.Body.ToString();
