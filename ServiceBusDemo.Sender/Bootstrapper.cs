@@ -36,6 +36,7 @@ public static class Bootstrapper
         services.AddScoped<TriggerSubject>(sp => 
             sp.AddSubject<TriggerSubject>()
             .AddObserver<TriggerSubject, DemoQueueTriggerObserver>(sp)
+            .AddObserver<TriggerSubject, SecondObserver>(sp)
         );
     }
     

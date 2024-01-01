@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Azure.Messaging.ServiceBus;
+using ServiceBusDemo.Abstraction.Models;
 
 namespace ServiceBusDemo.Abstraction.Publisher;
 

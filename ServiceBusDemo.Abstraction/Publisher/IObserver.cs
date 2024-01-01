@@ -1,4 +1,6 @@
-﻿namespace ServiceBusDemo.Abstraction.Publisher;
+﻿using ServiceBusDemo.Abstraction.Models;
+
+namespace ServiceBusDemo.Abstraction.Publisher;
 
 public interface IObserver
 {

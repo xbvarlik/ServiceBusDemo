@@ -30,9 +30,14 @@ public static class Bootstrapper
     
     private static void ConfigureServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<LogMessageHandler>();
+        services.AddSingleton<SecondHandler>();
+        
         services.AddSingleton<QueueHandlerRegistry>(sp => 
-            sp.AddHandlerRegistry().
-                AddMessageHandler<LogMessageHandler>(sp));
+            sp.AddHandlerRegistry()
+                .AddMessageHandler<LogMessageHandler>(sp)
+                .AddMessageHandler<SecondHandler>(sp)
+            );
         
         services.AddSubscriber(configuration);
     }

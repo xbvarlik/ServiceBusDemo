@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ServiceBusDemo.Abstraction.Models;
 
 namespace ServiceBusDemo.Abstraction.Publisher;
 

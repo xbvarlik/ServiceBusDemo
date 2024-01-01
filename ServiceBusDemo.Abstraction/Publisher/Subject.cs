@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using ServiceBusDemo.Abstraction.Models;
 
 namespace ServiceBusDemo.Abstraction.Publisher;
 
